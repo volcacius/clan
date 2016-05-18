@@ -67,10 +67,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 		message (STATUS "pdflatex not found =( Clan reference card can not be built")
 	endif()
 
-
-# osl
-	find_package(osl REQUIRED)
-
 # Flex
 	find_package(BISON REQUIRED)
 	find_package(FLEX REQUIRED)
@@ -86,7 +82,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 	include_directories("${CMAKE_CURRENT_BINARY_DIR}/include")
 	# clan
 	include_directories("./include")
-
 
 # Compiler log
 	message(STATUS "---")
@@ -121,6 +116,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 		${FLEX_clan_scanner_OUTPUTS}
 	)
 	target_link_libraries(clan ${OSL_LIBRARY})
+	target_include_directories(clan PRIVATE ${OSL_INCLUDE_DIR})
+
 	get_property(clan_lib_location TARGET clan PROPERTY LOCATION)
 	message(STATUS "Add clan library (shared) ${clan_lib_location}")
 
@@ -134,6 +131,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 	)
 	set_target_properties(clan_static PROPERTIES OUTPUT_NAME clan)
 	target_link_libraries(clan_static ${OSL_LIBRARY})
+	target_include_directories(clan_static PRIVATE ${OSL_INCLUDE_DIR})
 	get_property(clan_static_lib_location TARGET clan_static PROPERTY LOCATION)
 	message(STATUS "Add clan library (static) ${clan_static_lib_location}")
 
@@ -146,6 +144,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 	add_executable(clan_exe "source/clan.c")
 	set_target_properties(clan_exe PROPERTIES OUTPUT_NAME "clan")
 	target_link_libraries(clan_exe clan_static ${OSL_LIBRARY})
+	target_include_directories(clan_exe PRIVATE ${OSL_INCLUDE_DIR})
+
 
 	# clan test
 	find_package(PythonInterp)
